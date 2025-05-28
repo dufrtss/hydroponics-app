@@ -1,5 +1,11 @@
+import './styles/global.css'
+
+import { Button } from './components/ui/button'
+
 export default function App() {
-    return (
-        <h2>Hydroponics Integrated System</h2>
-    )
+  return (
+    <div className='flex justify-center items-center h-screen'>
+      <Button>Enviar</Button>
+    </div>
+  )
 }
