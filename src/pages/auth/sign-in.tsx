@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -16,6 +16,7 @@ type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignInForm>()
+  const navigate = useNavigate()
 
   async function handleSignIn(data: SignInForm) {
     try {
@@ -24,6 +25,8 @@ export function SignIn() {
       toast.success('Authenticated.', {
         description: 'Enjoy your stay!'
       })
+
+      navigate('/')
     } catch {
       toast.error('Invalid credentials.')
     }
