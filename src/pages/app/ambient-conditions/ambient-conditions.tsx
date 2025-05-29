@@ -1,9 +1,6 @@
-import { Pencil, Search, Trash, X } from 'lucide-react'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
+import { AmbientConditionsTableFilter } from './ambient-conditions-table-filter'
 import { AmbientConditionsTableRow } from './ambient-conditions-table-row'
 
 export function AmbientConditions() {
@@ -16,10 +13,7 @@ export function AmbientConditions() {
       </div>
 
       <div className='flex flex-col gap-3'>
-        <form className='flex items-center gap-2'>
-          <span className='text-sm font-semibold'>Filters:</span>
-          <Input placeholder='Measurement type' className='h-8 w-[320px]' />
-        </form>
+        <AmbientConditionsTableFilter />
 
         <div className='border rounded-md'>
           <Table>
