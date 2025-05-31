@@ -17,39 +17,39 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart'
-import { dateTickFormatter, dateTooltipLabelFormatter, humidityTickFormatter, temperatureTickFormatter } from '@/utils/chart-formatters'
+import { dateTickFormatter, dateTooltipLabelFormatter, phTickFormatter, temperatureTickFormatter } from '@/utils/chart-formatters'
 
 const data = [
-  { date: '2025-05-23', temperature: 32.12, humidity: 50.10 },
-  { date: '2025-05-24', temperature: 28, humidity: 52 },
-  { date: '2025-05-25', temperature: 24, humidity: 51 },
-  { date: '2025-05-26', temperature: 35, humidity: 48 },
-  { date: '2025-05-27', temperature: 26, humidity: 47 },
-  { date: '2025-05-28', temperature: 28, humidity: 60 },
-  { date: '2025-05-29', temperature: 40, humidity: 50 },
-  { date: '2025-05-30', temperature: 34, humidity: 49 }
+  { date: '2025-05-23', temperature: 22, ph: 7 },
+  { date: '2025-05-24', temperature: 20, ph: 6.4 },
+  { date: '2025-05-25', temperature: 23, ph: 6.7 },
+  { date: '2025-05-26', temperature: 22, ph: 7.2 },
+  { date: '2025-05-27', temperature: 21, ph: 7.1 },
+  { date: '2025-05-28', temperature: 29, ph: 7 },
+  { date: '2025-05-29', temperature: 26, ph: 7.4 },
+  { date: '2025-05-30', temperature: 31, ph: 7.8 }
 ]
 
 const chartConfig = {
   temperature: {
     label: 'Temperature'
   },
-  humidity: {
-    label: 'Humidity'
+  ph: {
+    label: 'pH'
   }
 } satisfies ChartConfig
 
-export function AmbientConditionsChart() {
+export function WaterConditionsChart() {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>('temperature')
   return (
-    <Card className='col-span-9 flex-1 py-4 sm:py-0'>
+    <Card className='col-span-6 flex-1 py-4 sm:py-0'>
       <CardHeader className='flex flex-col items-stretch justify-between border-b !p-0 sm:flex-row'>
         <div className='flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0'>
           <CardTitle className='text-base font-medium'>
-            Ambient conditions by period
+            Water conditions by period
           </CardTitle>
           <CardDescription>
-            Showing ambient temperature and humidity for the last week
+            Showing temperature and pH readings for the last week
           </CardDescription>
         </div>
 
@@ -68,8 +68,8 @@ export function AmbientConditionsChart() {
                   {chartConfig[chart].label}
                 </span>
                 <span className="text-lg leading-none font-bold sm:text-3xl text-nowrap">
-                  {data[0][key as keyof typeof chartConfig].toLocaleString()}
-                  <span>{chart === 'temperature' ? ' °C' : ' %RH' }</span>
+                  {data[0][key as keyof typeof chartConfig].toLocaleString()}{' '}
+                  <span>{chart === 'temperature' ? '°C' : 'pH'}</span>
                 </span>
               </button>
             )
@@ -86,11 +86,11 @@ export function AmbientConditionsChart() {
               tickLine={false}
               tickFormatter={(value: number) => {
                 if (activeChart === 'temperature') {
-                  return temperatureTickFormatter.format(value)
+                  return `${temperatureTickFormatter.format(value)}`
                 }
 
-                if (activeChart === 'humidity') {
-                  return `${humidityTickFormatter.format(value)}%RH`
+                if (activeChart === 'ph') {
+                  return `${phTickFormatter.format(value)}pH`
                 }
 
                 return value.toString()
@@ -121,7 +121,7 @@ export function AmbientConditionsChart() {
                       <div className="text-foreground ml-auto flex items-baseline gap-1 font-mono font-medium tabular-nums">
                         {value}
                         <span className="text-muted-foreground font-normal">
-                          {name === 'temperature' ? '°C' : '%RH'}
+                          {name === 'temperature' ? '°C' : 'pH'}
                         </span>
                       </div>
                     </div>

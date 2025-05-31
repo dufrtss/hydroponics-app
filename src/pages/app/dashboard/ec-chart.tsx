@@ -17,39 +17,42 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart'
-import { dateTickFormatter, dateTooltipLabelFormatter, humidityTickFormatter, temperatureTickFormatter } from '@/utils/chart-formatters'
+import { dateTickFormatter, dateTooltipLabelFormatter, ecTickFormatter } from '@/utils/chart-formatters'
 
 const data = [
-  { date: '2025-05-23', temperature: 32.12, humidity: 50.10 },
-  { date: '2025-05-24', temperature: 28, humidity: 52 },
-  { date: '2025-05-25', temperature: 24, humidity: 51 },
-  { date: '2025-05-26', temperature: 35, humidity: 48 },
-  { date: '2025-05-27', temperature: 26, humidity: 47 },
-  { date: '2025-05-28', temperature: 28, humidity: 60 },
-  { date: '2025-05-29', temperature: 40, humidity: 50 },
-  { date: '2025-05-30', temperature: 34, humidity: 49 }
+  { date: '2025-05-23', tds: 80, ec: 1.0, ec25c: 1.0 },
+  { date: '2025-05-24', tds: 82, ec: 1.3, ec25c: 1.1 },
+  { date: '2025-05-25', tds: 85, ec: 1.2, ec25c: 1.3 },
+  { date: '2025-05-26', tds: 100, ec: 1.6, ec25c: 0.9 },
+  { date: '2025-05-27', tds: 150, ec: 0.9, ec25c: 1.0 },
+  { date: '2025-05-28', tds: 94, ec: 1.8, ec25c: 1.4 },
+  { date: '2025-05-29', tds: 73, ec: 1.4, ec25c: 1.7 },
+  { date: '2025-05-30', tds: 112, ec: 1.2, ec25c: 1.3 }
 ]
 
 const chartConfig = {
-  temperature: {
-    label: 'Temperature'
+  tds: {
+    label: 'TDS'
   },
-  humidity: {
-    label: 'Humidity'
+  ec: {
+    label: 'EC'
+  },
+  ec25c: {
+    label: 'EC (25°C)'
   }
 } satisfies ChartConfig
 
-export function AmbientConditionsChart() {
-  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>('temperature')
+export function ECChart() {
+  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>('ec')
   return (
-    <Card className='col-span-9 flex-1 py-4 sm:py-0'>
+    <Card className='col-span-6 flex-1 py-4 sm:py-0'>
       <CardHeader className='flex flex-col items-stretch justify-between border-b !p-0 sm:flex-row'>
         <div className='flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0'>
           <CardTitle className='text-base font-medium'>
-            Ambient conditions by period
+            EC readings by period
           </CardTitle>
           <CardDescription>
-            Showing ambient temperature and humidity for the last week
+            Showing EC readings for the last week
           </CardDescription>
         </div>
 
@@ -69,7 +72,7 @@ export function AmbientConditionsChart() {
                 </span>
                 <span className="text-lg leading-none font-bold sm:text-3xl text-nowrap">
                   {data[0][key as keyof typeof chartConfig].toLocaleString()}
-                  <span>{chart === 'temperature' ? ' °C' : ' %RH' }</span>
+                  <span>{chart === 'tds' ? 'ppm' : 'mS/cm'}</span>
                 </span>
               </button>
             )
@@ -85,12 +88,12 @@ export function AmbientConditionsChart() {
               axisLine={false}
               tickLine={false}
               tickFormatter={(value: number) => {
-                if (activeChart === 'temperature') {
-                  return temperatureTickFormatter.format(value)
+                if (activeChart === 'ec' || activeChart === 'ec25c') {
+                  return `${ecTickFormatter.format(value)}mS/cm`
                 }
 
-                if (activeChart === 'humidity') {
-                  return `${humidityTickFormatter.format(value)}%RH`
+                if (activeChart === 'tds') {
+                  return `${ecTickFormatter.format(value)}ppm`
                 }
 
                 return value.toString()
@@ -121,7 +124,7 @@ export function AmbientConditionsChart() {
                       <div className="text-foreground ml-auto flex items-baseline gap-1 font-mono font-medium tabular-nums">
                         {value}
                         <span className="text-muted-foreground font-normal">
-                          {name === 'temperature' ? '°C' : '%RH'}
+                          {name === 'tds' ? 'ppm' : 'mS/cm'}
                         </span>
                       </div>
                     </div>

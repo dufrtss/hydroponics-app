@@ -5,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AmbientConditionsChart } from './ambient-conditions-chart'
 import { AmbientHumidityCard } from './ambient-humidity-card'
 import { AmbientTemperatureCard } from './ambient-temperature-card'
+import { ECChart } from './ec-chart'
+import { WaterConditionsChart } from './water-conditions-chart'
 import { WaterECCard } from './water-ec-card'
 import { WaterEC25CCard } from './water-ec25c-card'
 import { WaterPhCard } from './water-ph-card'
@@ -46,12 +48,19 @@ export function Dashboard() {
           </TabsContent>
 
           <TabsContent value='water'>
-            <div className='grid grid-cols-5 gap-4'>
-              <WaterTemperatureCard />
-              <WaterPhCard />
-              <WaterTDSCard />
-              <WaterECCard />
-              <WaterEC25CCard />
+            <div className='flex flex-col gap-4'>
+              <div className='grid grid-cols-5 gap-4'>
+                <WaterTemperatureCard />
+                <WaterPhCard />
+                <WaterTDSCard />
+                <WaterECCard />
+                <WaterEC25CCard />
+              </div>
+
+              <div className='grid grid-cols-12 gap-4'>
+                <WaterConditionsChart />
+                <ECChart />
+              </div>
             </div>
           </TabsContent>
         </Tabs>
