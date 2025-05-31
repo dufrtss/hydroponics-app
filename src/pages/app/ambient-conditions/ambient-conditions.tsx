@@ -1,8 +1,8 @@
 import { Pagination } from '@/components/pagination'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-import { AmbientConditionsTableFilter } from './ambient-conditions-table-filter'
-import { AmbientConditionsTableRow } from './ambient-conditions-table-row'
+import { AmbientConditionTableFilter } from './ambient-condition-table-filter'
+import { AmbientConditionTableRow } from './ambient-condition-table-row'
 
 export function AmbientConditions() {
   return (
@@ -14,7 +14,7 @@ export function AmbientConditions() {
       
 
         <div className='flex flex-col gap-3'>
-          <AmbientConditionsTableFilter />
+          <AmbientConditionTableFilter />
 
           <div className='border rounded-md'>
             <Table>
@@ -35,7 +35,7 @@ export function AmbientConditions() {
               <TableBody>
                 {Array.from({ length: 10 }).map((_, i) => {
                   return (
-                    <AmbientConditionsTableRow key={i} />
+                    <AmbientConditionTableRow key={i} />
                   )
                 })}
               </TableBody>

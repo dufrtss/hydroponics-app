@@ -1,12 +1,12 @@
 import { Pencil, Search, Trash } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
 
-import { AmbientConditionsDetais } from './ambient-conditions-details'
+import { AmbientConditionDetais } from './ambient-condition-details'
 
-export function AmbientConditionsTableRow() {
+export function AmbientConditionTableRow() {
   return (
     <TableRow>
       <TableCell>
@@ -18,7 +18,7 @@ export function AmbientConditionsTableRow() {
             </Button>
           </DialogTrigger>
 
-          <AmbientConditionsDetais />
+          <AmbientConditionDetais />
         </Dialog>
       </TableCell>
       <TableCell className='font-mono text-xs font-medium'>031093102s989fd8</TableCell>

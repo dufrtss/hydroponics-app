@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-export function AmbientConditionsTableFilter() {
+export function AmbientConditionTableFilter() {
   return (
     <form className='flex items-center gap-2'>
       <span className='text-sm font-semibold'>Filters:</span>

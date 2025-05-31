@@ -1,7 +1,7 @@
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
-export function AmbientConditionsDetais() {
+export function AmbientConditionDetais() {
   return (
     <DialogContent>
       <DialogHeader>
