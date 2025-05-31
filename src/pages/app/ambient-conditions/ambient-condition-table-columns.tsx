@@ -10,7 +10,7 @@ export const ambientConditionTableColumns: ColumnDef<Measurement>[] = [
     header: 'Identifier',
   },
   {
-    accessorKey: 'value',
+    accessorKey: 'data.value',
     header: ({ column }) => {
       return (
         <Button
@@ -24,7 +24,7 @@ export const ambientConditionTableColumns: ColumnDef<Measurement>[] = [
     }
   },
   {
-    accessorKey: 'unit',
+    accessorKey: 'data.unit',
     header: 'Unit',
   },
   {
