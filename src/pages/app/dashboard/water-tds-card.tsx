@@ -1,4 +1,4 @@
-import { Gauge } from 'lucide-react'
+import { Droplet } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -9,7 +9,7 @@ export function WaterTDSCard() {
         <CardTitle className='text-base font-semibold'>
           Last TDS reading (ppm)
         </CardTitle>
-        <Gauge className='h-4 w-4 text-muted-foreground' />
+        <Droplet className='h-4 w-4 text-muted-foreground' />
       </CardHeader>
 
       <CardContent className='flex flex-col gap-2'>
