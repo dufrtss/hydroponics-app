@@ -17,10 +17,10 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart'
-import { celsiusTickFormatter, humidityTickFormatter } from '@/lib/utils'
+import { celsiusTickFormatter, dateTooltipLabelFormatter, humidityTickFormatter } from '@/utils/chart-formatters'
 
 const data = [
-  { date: '2025-05-23', temperature: 32, humidity: 50 },
+  { date: '2025-05-23', temperature: 32.12, humidity: 50.10 },
   { date: '2025-05-24', temperature: 28, humidity: 52 },
   { date: '2025-05-25', temperature: 24, humidity: 51 },
   { date: '2025-05-26', temperature: 35, humidity: 48 },
@@ -46,7 +46,7 @@ const chartConfig = {
 export function AmbientConditionsChart() {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>('temperature')
   return (
-    <Card className='col-span-9 py-4 sm:py-0'>
+    <Card className='col-span-9 flex-1 py-4 sm:py-0'>
       <CardHeader className='flex flex-col items-stretch justify-between border-b !p-0 sm:flex-row'>
         <div className='flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0'>
           <CardTitle className='text-base font-medium'>
@@ -114,15 +114,19 @@ export function AmbientConditionsChart() {
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  className="w-[150px]"
-                  nameKey={activeChart === 'temperature' ? '°C' : '%RH'}
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })
-                  }}
+                  className="w-full"
+                  formatter={(value, name) => (
+                    <div className="text-muted-foreground flex min-w-[130px] gap-2 items-center justify-between text-xs">
+                      {chartConfig[name as keyof typeof chartConfig]?.label || name}
+                      <div className="text-foreground ml-auto flex items-baseline gap-1 font-mono font-medium tabular-nums">
+                        {value}
+                        <span className="text-muted-foreground font-normal">
+                          {name === 'temperature' ? '°C' : '%RH'}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  labelFormatter={dateTooltipLabelFormatter}
                 />
               }
             />
@@ -132,28 +136,6 @@ export function AmbientConditionsChart() {
               type='linear'
               strokeWidth={2}
               stroke={colors['green'][500]}
-            />
-
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  hideLabel
-                  formatter={(value, name) => (
-                    <div className="text-muted-foreground flex min-w-[130px] items-center text-xs">
-                      {chartConfig[name as keyof typeof chartConfig]?.label ||
-                      name}
-                      <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                        {value}
-                        <span className="text-muted-foreground font-normal">
-                        kcal
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                />
-              }
-              cursor={false}
-              defaultIndex={1}
             />
           </LineChart>
         </ChartContainer>

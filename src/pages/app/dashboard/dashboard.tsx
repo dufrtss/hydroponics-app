@@ -23,11 +23,11 @@ export function Dashboard() {
           <TabsList>
             <TabsTrigger value='ambient'>
               <Sprout className='w-4 h-4' />
-            Ambient
+              Ambient
             </TabsTrigger>
             <TabsTrigger value='water'>
               <Droplet className='w-4 h-4' />
-            Water
+              Water
             </TabsTrigger>
           </TabsList>
 
