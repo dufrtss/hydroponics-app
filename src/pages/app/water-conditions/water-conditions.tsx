@@ -1,5 +1,8 @@
 export function WaterConditions() {
   return (
-    <h1>Water Conditions</h1>
+    <>
+      <title>Hydroponics | Water conditions</title>
+      <h1>Water Conditions</h1>
+    </>
   )
 }

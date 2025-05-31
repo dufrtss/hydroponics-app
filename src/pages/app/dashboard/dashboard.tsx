@@ -13,45 +13,49 @@ import { WaterTemperatureCard } from './water-temperature-card'
 
 export function Dashboard() {
   return (
-    <div className='flex flex-col gap-4'>
-      <h1 className='text-3xl font-bold tracking-tight'>Dashboard</h1>
+    <>
+      <title>Hydroponics | Home</title>
 
-      <Tabs defaultValue='ambient'>
-        <TabsList>
-          <TabsTrigger value='ambient'>
-            <Sprout className='w-4 h-4' />
+      <div className='flex flex-col gap-4'>
+        <h1 className='text-3xl font-bold tracking-tight'>Dashboard</h1>
+
+        <Tabs defaultValue='ambient'>
+          <TabsList>
+            <TabsTrigger value='ambient'>
+              <Sprout className='w-4 h-4' />
             Ambient
-          </TabsTrigger>
-          <TabsTrigger value='water'>
-            <Droplet className='w-4 h-4' />
+            </TabsTrigger>
+            <TabsTrigger value='water'>
+              <Droplet className='w-4 h-4' />
             Water
-          </TabsTrigger>
-        </TabsList>
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value='ambient'>
-          <div className='flex flex-col gap-4'>
+          <TabsContent value='ambient'>
+            <div className='flex flex-col gap-4'>
 
-            <div className='grid grid-cols-4 gap-4'>
-              <AmbientTemperatureCard />
-              <AmbientHumidityCard />
+              <div className='grid grid-cols-4 gap-4'>
+                <AmbientTemperatureCard />
+                <AmbientHumidityCard />
+              </div>
+
+              <div className='grid grid-cols-9 gap-4'>
+                <AmbientConditionsChart />
+              </div>
             </div>
+          </TabsContent>
 
-            <div className='grid grid-cols-9 gap-4'>
-              <AmbientConditionsChart />
+          <TabsContent value='water'>
+            <div className='grid grid-cols-5 gap-4'>
+              <WaterTemperatureCard />
+              <WaterPhCard />
+              <WaterTDSCard />
+              <WaterECCard />
+              <WaterEC25CCard />
             </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value='water'>
-          <div className='grid grid-cols-5 gap-4'>
-            <WaterTemperatureCard />
-            <WaterPhCard />
-            <WaterTDSCard />
-            <WaterECCard />
-            <WaterEC25CCard />
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   )
 }
