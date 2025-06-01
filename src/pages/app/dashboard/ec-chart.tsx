@@ -5,7 +5,6 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import colors from 'tailwindcss/colors'
 
 import { fetchWaterEC } from '@/api/fetch-water-ec'
-import { fetchWaterEC25C } from '@/api/fetch-water-ec25c'
 import { fetchWaterTDS } from '@/api/fetch-water-tds'
 import {
   Card,
@@ -55,15 +54,6 @@ export function ECChart() {
     queryKey: ['measurements', 'water', 'ec-readings']
   })
 
-  const { data: waterEC25CReadings } = useQuery({
-    queryFn: () => fetchWaterEC25C({
-      from: startOfDay(new Date()),
-      to: new Date()
-    }),
-    queryKey: ['measurements', 'water', 'ec25c-readings']
-  })
-  
-
   return (
     <Card className='col-span-6 flex-1 py-4 sm:py-0'>
       <CardHeader className='flex flex-col items-stretch justify-between border-b !p-0 sm:flex-row'>
@@ -94,10 +84,8 @@ export function ECChart() {
                   {
                     chart === 'tds' ?
                       waterTDSReadings?.measurements[0].data.value.toFixed(1)
-                      : chart === 'ec' ?
-                        waterECReadings?.measurements[0].data.value.toFixed(1)
-                        :
-                        waterEC25CReadings?.measurements[0].data.value.toFixed(1)
+                      : 
+                      waterECReadings?.measurements[0].data.value.toFixed(1)
                   }
                   <span>{chart === 'tds' ? 'ppm' : 'mS/cm'}</span>
                 </span>
@@ -114,9 +102,8 @@ export function ECChart() {
             data={
               activeChart === 'tds' ?
                 waterTDSReadings?.measurements.slice().reverse()
-                : activeChart === 'ec' ?
-                  waterECReadings?.measurements.slice().reverse()
-                  : waterEC25CReadings?.measurements.slice().reverse()
+                :
+                waterECReadings?.measurements.slice().reverse()
             }
           >
             <YAxis

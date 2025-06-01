@@ -49,12 +49,11 @@ export function Dashboard() {
 
           <TabsContent value='water'>
             <div className='flex flex-col gap-4'>
-              <div className='grid grid-cols-5 gap-4'>
+              <div className='grid grid-cols-4 gap-4'>
                 <WaterTemperatureCard />
                 <WaterPhCard />
                 <WaterTDSCard />
                 <WaterECCard />
-                <WaterEC25CCard />
               </div>
 
               <div className='grid grid-cols-12 gap-4'>
