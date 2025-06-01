@@ -1,8 +1,19 @@
+import { useQuery } from '@tanstack/react-query'
+import { startOfDay } from 'date-fns'
 import { Droplet } from 'lucide-react'
 
+import { fetchWaterPH } from '@/api/fetch-water-ph'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export function WaterPhCard() {
+  const { data: waterPHReadings } = useQuery({
+    queryFn: () => fetchWaterPH({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'water', 'latest-ph-reading']
+  })
+  
   return (
     <Card className='gap-2'>
       <CardHeader className='flex items-center justify-between'>
@@ -13,15 +24,13 @@ export function WaterPhCard() {
       </CardHeader>
 
       <CardContent className='flex flex-col gap-2'>
-        <span className='text-2xl font-bold tracking-tight'>
-          7 pH
-        </span>
-        <p className='text-xs text-muted-foreground'>
-          {/* <span className='text-rose-500 dark:text-rose-400'> */}
-            +1%
-          {/* </span> */}
-          {' '}increase in comparison to the last day
-        </p>
+        {waterPHReadings && waterPHReadings.measurements.length > 0 && (
+          <>
+            <span className='text-2xl font-bold tracking-tight'>
+              {waterPHReadings.measurements[0].data.value.toFixed(2)} {waterPHReadings.measurements[0].data.unit}
+            </span>
+          </>
+        )}
       </CardContent>
     </Card>
   )

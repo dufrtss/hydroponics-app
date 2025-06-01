@@ -52,7 +52,7 @@ export function ECChart() {
             EC readings by period
           </CardTitle>
           <CardDescription>
-            Showing EC readings for the last week
+            Showing EC readings for the last day
           </CardDescription>
         </div>
 

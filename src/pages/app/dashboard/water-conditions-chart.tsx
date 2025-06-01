@@ -49,7 +49,7 @@ export function WaterConditionsChart() {
             Water conditions by period
           </CardTitle>
           <CardDescription>
-            Showing temperature and pH readings for the last week
+            Showing temperature and pH readings for the last day
           </CardDescription>
         </div>
 

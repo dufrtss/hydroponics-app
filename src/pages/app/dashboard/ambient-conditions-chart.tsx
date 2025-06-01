@@ -49,7 +49,7 @@ export function AmbientConditionsChart() {
             Ambient conditions by period
           </CardTitle>
           <CardDescription>
-            Showing ambient temperature and humidity for the last week
+            Showing ambient temperature and humidity for the last day
           </CardDescription>
         </div>
 

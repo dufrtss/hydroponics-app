@@ -1,8 +1,19 @@
+import { useQuery } from '@tanstack/react-query'
+import { startOfDay } from 'date-fns'
 import { AirVent } from 'lucide-react'
 
+import { fetchAmbientHumidity } from '@/api/fetch-ambient-humidity'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export function AmbientHumidityCard() {
+  const { data: ambientHumidityReadings } = useQuery({
+    queryFn: () => fetchAmbientHumidity({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'ambient', 'latest-humidity-reading']
+  })
+
   return (
     <Card className='gap-2'>
       <CardHeader className='flex items-center justify-between'>
@@ -13,15 +24,13 @@ export function AmbientHumidityCard() {
       </CardHeader>
 
       <CardContent className='flex flex-col gap-2'>
-        <span className='text-2xl font-bold tracking-tight'>
-          55 %RH
-        </span>
-        <p className='text-xs text-muted-foreground'>
-          {/* <span className='text-rose-500 dark:text-rose-400'> */}
-            +10%
-          {/* </span> */}
-          {' '}increase in comparison to the last day
-        </p>
+        {ambientHumidityReadings && ambientHumidityReadings.measurements.length > 0 && (
+          <>
+            <span className='text-2xl font-bold tracking-tight'>
+              {ambientHumidityReadings.measurements[0].data.value} {ambientHumidityReadings.measurements[0].data.unit}
+            </span>
+          </>
+        )}
       </CardContent>
     </Card>
   )
