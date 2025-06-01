@@ -23,7 +23,9 @@ export const phTickFormatter = new Intl.NumberFormat('en-US', {
 export function dateTickFormatter(value: string | number) {
   return new Date(value).toLocaleDateString('en-US', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
   })
 }
 
@@ -31,6 +33,8 @@ export function dateTooltipLabelFormatter(value: string | number) {
   return new Date(value).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
   })
 }

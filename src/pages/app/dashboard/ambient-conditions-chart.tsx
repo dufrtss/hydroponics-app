@@ -1,7 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
+import { startOfDay } from 'date-fns'
 import { useState } from 'react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import colors from 'tailwindcss/colors'
 
+import { fetchAmbientHumidity } from '@/api/fetch-ambient-humidity'
+import { fetchAmbientTemperature } from '@/api/fetch-ambient-temperature'
 import {
   Card,
   CardContent,
@@ -19,17 +23,6 @@ import {
 } from '@/components/ui/chart'
 import { dateTickFormatter, dateTooltipLabelFormatter, humidityTickFormatter, temperatureTickFormatter } from '@/utils/chart-formatters'
 
-const data = [
-  { date: '2025-05-23', temperature: 32.12, humidity: 50.10 },
-  { date: '2025-05-24', temperature: 28, humidity: 52 },
-  { date: '2025-05-25', temperature: 24, humidity: 51 },
-  { date: '2025-05-26', temperature: 35, humidity: 48 },
-  { date: '2025-05-27', temperature: 26, humidity: 47 },
-  { date: '2025-05-28', temperature: 28, humidity: 60 },
-  { date: '2025-05-29', temperature: 40, humidity: 50 },
-  { date: '2025-05-30', temperature: 34, humidity: 49 }
-]
-
 const chartConfig = {
   temperature: {
     label: 'Temperature'
@@ -41,6 +34,23 @@ const chartConfig = {
 
 export function AmbientConditionsChart() {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>('temperature')
+
+  const { data: ambientTemperatureReadings } = useQuery({
+    queryFn: () => fetchAmbientTemperature({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'ambient', 'temperature-readings']
+  })
+
+  const { data: ambientHumidityReadings } = useQuery({
+    queryFn: () => fetchAmbientHumidity({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'ambient', 'humidity-readings']
+  })
+
   return (
     <Card className='col-span-9 flex-1 py-4 sm:py-0'>
       <CardHeader className='flex flex-col items-stretch justify-between border-b !p-0 sm:flex-row'>
@@ -68,7 +78,12 @@ export function AmbientConditionsChart() {
                   {chartConfig[chart].label}
                 </span>
                 <span className="text-lg leading-none font-bold sm:text-3xl text-nowrap">
-                  {data[0][key as keyof typeof chartConfig].toLocaleString()}
+                  {
+                    chart === 'temperature' ?
+                      ambientTemperatureReadings?.measurements[0].data.value.toFixed(2)
+                      :
+                      ambientHumidityReadings?.measurements[0].data.value.toFixed(2)
+                  }
                   <span>{chart === 'temperature' ? ' °C' : ' %RH' }</span>
                 </span>
               </button>
@@ -79,7 +94,15 @@ export function AmbientConditionsChart() {
 
       <CardContent className='px-2 sm:p-6'>
         <ChartContainer config={chartConfig} className='aspect-auto h-[250px] w-full px-2'>
-          <LineChart accessibilityLayer data={data}>
+          <LineChart
+            accessibilityLayer
+            data={
+              activeChart === 'temperature' ?
+                ambientTemperatureReadings?.measurements.slice().reverse()
+                :
+                ambientHumidityReadings?.measurements.slice().reverse()
+            }
+          >
             <YAxis
               stroke='#888'
               axisLine={false}
@@ -98,7 +121,7 @@ export function AmbientConditionsChart() {
             />
 
             <XAxis
-              dataKey='date'
+              dataKey='createdAt'
               stroke='#888'
               axisLine={false}
               tickLine={false}
@@ -112,16 +135,21 @@ export function AmbientConditionsChart() {
               content={
                 <ChartTooltipContent
                   className="w-full"
-                  formatter={(value, name) => (
+                  formatter={(value) => (
                     <div className="text-muted-foreground flex min-w-[130px] gap-2 items-center justify-between text-xs">
                       <div className='flex gap-2 items-center'>
                         <div className='bg-green-500 p-1 rounded'></div>
-                        {chartConfig[name as keyof typeof chartConfig]?.label || name}
+                        {
+                          activeChart === 'temperature' ?
+                            chartConfig.temperature.label
+                            :
+                            chartConfig.humidity.label
+                        }
                       </div>
                       <div className="text-foreground ml-auto flex items-baseline gap-1 font-mono font-medium tabular-nums">
-                        {value}
+                        {typeof value === 'number' ? value.toFixed(2) : value}
                         <span className="text-muted-foreground font-normal">
-                          {name === 'temperature' ? '°C' : '%RH'}
+                          {activeChart === 'temperature' ? '°C' : '%RH'}
                         </span>
                       </div>
                     </div>
@@ -132,7 +160,7 @@ export function AmbientConditionsChart() {
             />
 
             <Line
-              dataKey={activeChart}
+              dataKey={'data.value'}
               type='linear'
               strokeWidth={2}
               stroke={colors['green'][500]}
