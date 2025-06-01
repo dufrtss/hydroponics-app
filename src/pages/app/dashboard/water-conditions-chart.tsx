@@ -80,9 +80,9 @@ export function WaterConditionsChart() {
                 <span className="text-lg leading-none font-bold sm:text-3xl text-nowrap">
                   {
                     chart === 'temperature' ?
-                      waterTemperatureReadings?.measurements[0].data.value.toFixed(2)
+                      waterTemperatureReadings?.measurements[0].data.value.toFixed(1)
                       :
-                      waterPHReadings?.measurements[0].data.value.toFixed(2)
+                      waterPHReadings?.measurements[0].data.value.toFixed(1)
                   }
                   <span>{chart === 'temperature' ? '°C' : 'pH'}</span>
                 </span>

@@ -80,9 +80,9 @@ export function AmbientConditionsChart() {
                 <span className="text-lg leading-none font-bold sm:text-3xl text-nowrap">
                   {
                     chart === 'temperature' ?
-                      ambientTemperatureReadings?.measurements[0].data.value.toFixed(2)
+                      ambientTemperatureReadings?.measurements[0].data.value.toFixed(1)
                       :
-                      ambientHumidityReadings?.measurements[0].data.value.toFixed(2)
+                      ambientHumidityReadings?.measurements[0].data.value.toFixed(1)
                   }
                   <span>{chart === 'temperature' ? ' °C' : ' %RH' }</span>
                 </span>

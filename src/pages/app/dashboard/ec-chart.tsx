@@ -1,7 +1,12 @@
+import { useQuery } from '@tanstack/react-query'
+import { startOfDay } from 'date-fns'
 import { useState } from 'react'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import colors from 'tailwindcss/colors'
 
+import { fetchWaterEC } from '@/api/fetch-water-ec'
+import { fetchWaterEC25C } from '@/api/fetch-water-ec25c'
+import { fetchWaterTDS } from '@/api/fetch-water-tds'
 import {
   Card,
   CardContent,
@@ -19,17 +24,6 @@ import {
 } from '@/components/ui/chart'
 import { dateTickFormatter, dateTooltipLabelFormatter, ecTickFormatter } from '@/utils/chart-formatters'
 
-const data = [
-  { date: '2025-05-23', tds: 80, ec: 1.0, ec25c: 1.0 },
-  { date: '2025-05-24', tds: 82, ec: 1.3, ec25c: 1.1 },
-  { date: '2025-05-25', tds: 85, ec: 1.2, ec25c: 1.3 },
-  { date: '2025-05-26', tds: 100, ec: 1.6, ec25c: 0.9 },
-  { date: '2025-05-27', tds: 150, ec: 0.9, ec25c: 1.0 },
-  { date: '2025-05-28', tds: 94, ec: 1.8, ec25c: 1.4 },
-  { date: '2025-05-29', tds: 73, ec: 1.4, ec25c: 1.7 },
-  { date: '2025-05-30', tds: 112, ec: 1.2, ec25c: 1.3 }
-]
-
 const chartConfig = {
   tds: {
     label: 'TDS'
@@ -44,6 +38,32 @@ const chartConfig = {
 
 export function ECChart() {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>('ec')
+
+  const { data: waterTDSReadings } = useQuery({
+    queryFn: () => fetchWaterTDS({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'water', 'tds-readings']
+  })
+    
+  const { data: waterECReadings } = useQuery({
+    queryFn: () => fetchWaterEC({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'water', 'ec-readings']
+  })
+
+  const { data: waterEC25CReadings } = useQuery({
+    queryFn: () => fetchWaterEC25C({
+      from: startOfDay(new Date()),
+      to: new Date()
+    }),
+    queryKey: ['measurements', 'water', 'ec25c-readings']
+  })
+  
+
   return (
     <Card className='col-span-6 flex-1 py-4 sm:py-0'>
       <CardHeader className='flex flex-col items-stretch justify-between border-b !p-0 sm:flex-row'>
@@ -71,7 +91,14 @@ export function ECChart() {
                   {chartConfig[chart].label}
                 </span>
                 <span className="text-lg leading-none font-bold sm:text-3xl text-nowrap">
-                  {data[0][key as keyof typeof chartConfig].toLocaleString()}
+                  {
+                    chart === 'tds' ?
+                      waterTDSReadings?.measurements[0].data.value.toFixed(1)
+                      : chart === 'ec' ?
+                        waterECReadings?.measurements[0].data.value.toFixed(1)
+                        :
+                        waterEC25CReadings?.measurements[0].data.value.toFixed(1)
+                  }
                   <span>{chart === 'tds' ? 'ppm' : 'mS/cm'}</span>
                 </span>
               </button>
@@ -82,7 +109,16 @@ export function ECChart() {
 
       <CardContent className='px-2 sm:p-6'>
         <ChartContainer config={chartConfig} className='aspect-auto h-[250px] w-full px-2'>
-          <LineChart accessibilityLayer data={data}>
+          <LineChart
+            accessibilityLayer
+            data={
+              activeChart === 'tds' ?
+                waterTDSReadings?.measurements.slice().reverse()
+                : activeChart === 'ec' ?
+                  waterECReadings?.measurements.slice().reverse()
+                  : waterEC25CReadings?.measurements.slice().reverse()
+            }
+          >
             <YAxis
               stroke='#888'
               axisLine={false}
@@ -101,7 +137,7 @@ export function ECChart() {
             />
 
             <XAxis
-              dataKey='date'
+              dataKey='createdAt'
               stroke='#888'
               axisLine={false}
               tickLine={false}
@@ -115,16 +151,23 @@ export function ECChart() {
               content={
                 <ChartTooltipContent
                   className="w-full"
-                  formatter={(value, name) => (
+                  formatter={(value) => (
                     <div className="text-muted-foreground flex min-w-[130px] gap-2 items-center justify-between text-xs">
                       <div className='flex gap-2 items-center'>
                         <div className='bg-green-500 p-1 rounded'></div>
-                        {chartConfig[name as keyof typeof chartConfig]?.label || name}
+                        {
+                          activeChart === 'tds' ?
+                            chartConfig.tds.label
+                            : activeChart === 'ec' ?
+                              chartConfig.ec.label
+                              :
+                              chartConfig.ec25c.label
+                        }
                       </div>
                       <div className="text-foreground ml-auto flex items-baseline gap-1 font-mono font-medium tabular-nums">
-                        {value}
+                        {typeof value === 'number' ? value.toFixed(2) : value}
                         <span className="text-muted-foreground font-normal">
-                          {name === 'tds' ? 'ppm' : 'mS/cm'}
+                          {activeChart === 'tds' ? 'ppm' : 'mS/cm'}
                         </span>
                       </div>
                     </div>
@@ -135,7 +178,7 @@ export function ECChart() {
             />
 
             <Line
-              dataKey={activeChart}
+              dataKey={'data.value'}
               type='linear'
               strokeWidth={2}
               stroke={colors['green'][500]}

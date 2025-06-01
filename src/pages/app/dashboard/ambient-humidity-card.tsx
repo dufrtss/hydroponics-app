@@ -27,7 +27,7 @@ export function AmbientHumidityCard() {
         {ambientHumidityReadings && ambientHumidityReadings.measurements.length > 0 && (
           <>
             <span className='text-2xl font-bold tracking-tight'>
-              {ambientHumidityReadings.measurements[0].data.value} {ambientHumidityReadings.measurements[0].data.unit}
+              {ambientHumidityReadings.measurements[0].data.value.toFixed(2)} {ambientHumidityReadings.measurements[0].data.unit}
             </span>
           </>
         )}
