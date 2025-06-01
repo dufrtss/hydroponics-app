@@ -1,8 +1,10 @@
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { registerAccount } from '@/api/register-account'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,15 +21,23 @@ export function SignUp() {
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignUpForm>()
   const navigate = useNavigate()
 
+  const { mutateAsync: registerAccountFn } = useMutation({
+    mutationFn: registerAccount
+  })
+
   async function handleSignUp(data: SignUpForm) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await registerAccountFn({
+        name: data.name,
+        email: data.email,
+        password: data.password
+      })
     
       toast.success('Account successfully created.', {
         description: 'Start monitoring now.',
         action: {
           label: 'Login',
-          onClick: () => navigate('/sign-in')
+          onClick: () => navigate(`/sign-in?email=${data.email}`)
         }
       })
     } catch {
