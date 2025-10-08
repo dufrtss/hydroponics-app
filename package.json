@@ -1,8 +1,12 @@
 {
   "name": "hydroponics-app",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "authors": [
+    "Eduardo Freitas <eduardofragadefretas@gmail.com>",
+    "Sofia Martins <sofia.martinslv@hotmail.com>"
+  ],
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
